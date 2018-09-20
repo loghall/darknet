@@ -7,6 +7,7 @@
 #include <math.h>
 #include <float.h>
 #include <string.h>
+#include "fixed.h" 
 
 #if defined(_OPENMP)
 #include <omp.h>
@@ -68,7 +69,32 @@ void time_random_matrix(int TA, int TB, int m, int k, int n)
     free(c);
 }
 
+void gemm_nn_fixed(int M, int N, int K,
+    int16_t *A, int lda,
+    int16_t *B, int ldb,
+    int16_t *C, int ldc)
+{
+    int i, j, k;
+    for (i = 0; i < M; ++i) {
+        for (k = 0; k < K; ++k) {
+            for (j = 0; j < N; ++j) {
+                C[i * ldc + j] += (uint16_t) ((A[i * lda + k]*B[k*ldb + j]) / FIXED_MULT_DIVISOR);
+            }
+        }
+    }
+}
 
+void gemm_fixed(int M, int N, int K,
+        int16_t *A, int lda,
+        int16_t *B, int ldb,
+        int16_t *C, int ldc)
+{
+    int t;
+    #pragma omp parallel for
+    for (t = 0; t < M; ++t) {
+        gemm_nn_fixed(1, N, K, A + t*lda, lda, B, ldb, C + t*ldc, ldc);
+    }
+} 
 void gemm(int TA, int TB, int M, int N, int K, float ALPHA,
         float *A, int lda,
         float *B, int ldb,
@@ -872,7 +898,7 @@ void gemm_nn_custom_bin_mean_transposed(int M, int N, int K, float ALPHA_UNUSED,
                 __m256i xor256 = _mm256_xor_si256(a_bit256, b_bit256);  // xnor = not(xor(a,b))
                 __m256i c_bit256 = _mm256_andnot_si256(xor256, all_1);  // can be optimized - we can do other NOT for wegihts once and do not do this NOT
 
-                count_sum = _mm256_add_epi64(count256(c_bit256), count_sum);    //  Mula’s algorithm
+                count_sum = _mm256_add_epi64(count256(c_bit256), count_sum);    //  Mulaï¿½s algorithm
 
                 //count += popcnt256(c_bit256);
 

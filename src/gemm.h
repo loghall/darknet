@@ -63,6 +63,10 @@ void gemm_bin(int M, int N, int K, float ALPHA,
 void forward_maxpool_layer_avx(float *src, float *dst, int *indexes, int size, int w, int h, int out_w, int out_h, int c,
     int pad, int stride, int batch);
 
+void gemm_fixed(int M, int N, int K,
+        int16_t *A, int lda,
+        int16_t *B, int ldb,
+        int16_t *C, int ldc);
 
 void gemm(int TA, int TB, int M, int N, int K, float ALPHA,
                     float *A, int lda,
