@@ -72,19 +72,7 @@ void resize_cost_layer(cost_layer *l, int inputs)
 
 void forward_cost_layer(cost_layer l, network_state state)
 {
-    if (!state.truth) return;
-    if(l.cost_type == MASKED){
-        int i;
-        for(i = 0; i < l.batch*l.inputs; ++i){
-            if(state.truth[i] == SECRET_NUM) state.input[i] = SECRET_NUM;
-        }
-    }
-    if(l.cost_type == SMOOTH){
-        smooth_l1_cpu(l.batch*l.inputs, state.input, state.truth, l.delta, l.output);
-    } else {
-        l2_cpu(l.batch*l.inputs, state.input, state.truth, l.delta, l.output);
-    }
-    l.cost[0] = sum_array(l.output, l.batch*l.inputs);
+    return;
 }
 
 void backward_cost_layer(const cost_layer l, network_state state)

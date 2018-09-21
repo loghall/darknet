@@ -196,7 +196,7 @@ struct layer{
     int   * input_layers;
     int   * input_sizes;
     float * delta;
-    float * output;
+    void * output;
     float * squared;
     float * norms;
 

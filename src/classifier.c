@@ -685,9 +685,7 @@ void try_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filena
 #ifdef GPU
         cuda_pull_array(l.output_gpu, l.output, l.outputs);
 #endif
-        for(i = 0; i < l.outputs; ++i){
-            printf("%f\n", l.output[i]);
-        }
+       
         /*
 
            printf("\n\nWeights\n");

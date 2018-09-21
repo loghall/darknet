@@ -681,21 +681,14 @@ size_t binary_transpose_align_input(int k, int n, float *b, char **t_bit_input, 
 
 void forward_convolutional_layer(convolutional_layer l, network_state state)
 {
+    float * input = (float *) state.input;
+    float * output = (float *) l.output; 
+    
     int out_h = convolutional_out_height(l);
     int out_w = convolutional_out_width(l);
     int i;
 
-    fill_cpu(l.outputs*l.batch, 0, l.output, 1);
-
-    if(l.xnor){
-        if (!l.align_bit_weights || state.train) {
-            binarize_weights(l.weights, l.n, l.c*l.size*l.size, l.binary_weights);
-            //printf("\n binarize_weights l.align_bit_weights = %p \n", l.align_bit_weights);
-        }
-        swap_binary(&l);
-        binarize_cpu(state.input, l.c*l.h*l.w*l.batch, l.binary_input);
-        state.input = l.binary_input;
-    }
+    fill_cpu(l.outputs*l.batch, 0, output, 1);
 
     int m = l.n;
     int k = l.size*l.size*l.c;
@@ -710,9 +703,9 @@ void forward_convolutional_layer(convolutional_layer l, network_state state)
     
     float *a = l.weights;
     float *b = state.workspace;
-    float *c = l.output;
+    float *c = output;
     
-    im2col_cpu_custom(state.input, l.c, l.h, l.w, l.size, l.stride, l.pad, b);
+    im2col_cpu_custom(input, l.c, l.h, l.w, l.size, l.stride, l.pad, b);
     
     // allocate mem for fixed point
     int32_t * fixed_a = malloc(m * k * sizeof(int32_t));
@@ -735,13 +728,13 @@ void forward_convolutional_layer(convolutional_layer l, network_state state)
         fixed_c += n*m;
         c += n*m; 
         
-        state.input += l.c*l.h*l.w;
+        input += l.c*l.h*l.w;
     }
     
-    add_bias(l.output, l.biases, l.batch, l.n, out_h*out_w);
+    add_bias(output, l.biases, l.batch, l.n, out_h*out_w);
 
     //activate_array(l.output, m*n*l.batch, l.activation);
-    activate_array_cpu_custom(l.output, m*n*l.batch, l.activation);
+    activate_array_cpu_custom(output, m*n*l.batch, l.activation);
 
     if(l.binary || l.xnor) swap_binary(&l);
     free(fixed_a);
