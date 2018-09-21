@@ -715,10 +715,10 @@ void forward_convolutional_layer(convolutional_layer l, network_state state)
     im2col_cpu_custom(state.input, l.c, l.h, l.w, l.size, l.stride, l.pad, b);
     
     // allocate mem for fixed point
-    int16_t * fixed_a = malloc(m * k * sizeof(int16_t));
-    int16_t * fixed_b = malloc(k * n * sizeof(int16_t));
-    int16_t * fixed_c = malloc(m * n * l.batch * sizeof(int16_t)); 
-    int16_t * fixed_output = fixed_c; 
+    int32_t * fixed_a = malloc(m * k * sizeof(int32_t));
+    int32_t * fixed_b = malloc(k * n * sizeof(int32_t));
+    int32_t * fixed_c = malloc(m * n * l.batch * sizeof(int32_t)); 
+    int32_t * fixed_output = fixed_c; 
     // convert to fixed point 
     to_fixed(a, m, k, fixed_a);
     to_fixed(b, k, n, fixed_b);

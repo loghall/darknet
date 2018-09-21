@@ -3,7 +3,7 @@ CUDNN=0
 CUDNN_HALF=0
 OPENCV=0
 AVX=0
-OPENMP=0
+OPENMP=1
 LIBSO=0
 
 # set GPU=1 and CUDNN=1 to speedup on GPU
@@ -51,7 +51,7 @@ NVCC=nvcc
 OPTS=-Ofast
 LDFLAGS= -lm -pthread 
 COMMON= 
-CFLAGS=-Wall -Wfatal-errors -Wno-unused-result -Wno-unknown-pragmas -pg
+CFLAGS=-Wall -Wfatal-errors -Wno-unused-result -Wno-unknown-pragmas -pg -mcpu=cortex-a9 -mcpu=cortex-a9 -ftree-vectorize -mvectorize-with-neon-quad 
 
 ifeq ($(DEBUG), 1) 
 OPTS= -O0 -g

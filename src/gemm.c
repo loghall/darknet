@@ -70,24 +70,25 @@ void time_random_matrix(int TA, int TB, int m, int k, int n)
 }
 
 void gemm_nn_fixed(int M, int N, int K,
-    int16_t *A, int lda,
-    int16_t *B, int ldb,
-    int16_t *C, int ldc)
+    int32_t *A, int lda,
+    int32_t *B, int ldb,
+    int32_t *C, int ldc)
 {
     int i, j, k;
     for (i = 0; i < M; ++i) {
         for (k = 0; k < K; ++k) {
             for (j = 0; j < N; ++j) {
-                C[i * ldc + j] += (uint16_t) ((A[i * lda + k]*B[k*ldb + j]) / FIXED_MULT_DIVISOR);
+                C[i * ldc + j] += (int32_t) ((A[i * lda + k]*(int64_t)B[k*ldb + j]) / FIXED_MULT_DIVISOR);
+                //C[i * ldc + j] += (int32_t) ((int64_t)(A[i * lda + k]*B[k*ldb + j]) / FIXED_MULT_DIVISOR);
             }
         }
     }
 }
 
 void gemm_fixed(int M, int N, int K,
-        int16_t *A, int lda,
-        int16_t *B, int ldb,
-        int16_t *C, int ldc)
+        int32_t *A, int lda,
+        int32_t *B, int ldb,
+        int32_t *C, int ldc)
 {
     int t;
     #pragma omp parallel for
