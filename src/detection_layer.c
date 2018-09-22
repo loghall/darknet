@@ -48,7 +48,7 @@ detection_layer make_detection_layer(int batch, int inputs, int n, int side, int
 
 void forward_detection_layer(const detection_layer l, network_state state)
 {
-    return;
+    printf("forward detection layer\n");
 }
 
 void backward_detection_layer(const detection_layer l, network_state state)

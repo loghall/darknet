@@ -80,12 +80,13 @@ void resize_maxpool_layer(maxpool_layer *l, int w, int h)
 
 void forward_maxpool_layer(const maxpool_layer l, network_state state)
 {   float * input = (float *) state.input;
-    float * output = (float *) l.output; 
+    float * output = (float *) l.output;
     
     if (!state.train) {
         forward_maxpool_layer_avx(input, output, l.indexes, l.size, l.w, l.h, l.out_w, l.out_h, l.c, l.pad, l.stride, l.batch);
         return;
     }
+	printf("Oh no maxpool\n");
 }
 
 void backward_maxpool_layer(const maxpool_layer l, network_state state)

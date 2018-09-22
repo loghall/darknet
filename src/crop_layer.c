@@ -66,6 +66,6 @@ void resize_crop_layer(layer *l, int w, int h)
 
 void forward_crop_layer(const crop_layer l, network_state state)
 {
-    return;
+    printf("apparently we have a crop layer\n");
 }
 

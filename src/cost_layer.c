@@ -72,7 +72,7 @@ void resize_cost_layer(cost_layer *l, int inputs)
 
 void forward_cost_layer(cost_layer l, network_state state)
 {
-    return;
+    printf("apparently we have a cost layer\n");
 }
 
 void backward_cost_layer(const cost_layer l, network_state state)

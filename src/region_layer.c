@@ -178,8 +178,9 @@ static int entry_index(layer l, int batch, int location, int entry)
 void softmax_tree(float *input, int batch, int inputs, float temp, tree *hierarchy, float *output);
 void forward_region_layer(const region_layer l, network_state state)
 {
-    return;
+    printf("apparently we have a region layer\n");
 }
+
 
 void backward_region_layer(const region_layer l, network_state state)
 {
@@ -323,5 +324,28 @@ void correct_region_boxes(detection *dets, int n, int w, int h, int netw, int ne
 
 void get_region_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, float tree_thresh, int relative, detection *dets)
 {
- return;   
+    int i, j, n, z;
+    float *predictions = l.output;
+    if (l.batch == 2) {
+        float *flip = l.output + l.outputs;
+        for (j = 0; j < l.h; ++j) {
+            for (i = 0; i < l.w / 2; ++i) {
+                for (n = 0; n < l.n; ++n) {
+                    for (z = 0; z < l.classes + l.coords + 1; ++z) {
+                        int i1 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + i;
+                        int i2 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + (l.w - i - 1);
+                        float swap = flip[i1];
+                        flip[i1] = flip[i2];
+                        flip[i2] = swap;
+                        if (z == 0) {
+                            flip[i1] = -flip[i1];
+                            flip[i2] = -flip[i2];
+                        }
+                    }
+                }
+            }
+        }
+        printf("apparently we neeed region layer\n");
+    }
+    
 }

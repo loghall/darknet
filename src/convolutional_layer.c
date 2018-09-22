@@ -687,8 +687,14 @@ void forward_convolutional_layer(convolutional_layer l, network_state state)
     int out_h = convolutional_out_height(l);
     int out_w = convolutional_out_width(l);
     int i;
+    
+    float * input = (float *) state.input;
+    float * output = (float *) l.output;
+    fill_cpu(l.outputs*l.batch, 0,output, 1);
 
-    fill_cpu(l.outputs*l.batch, 0, output, 1);
+    if(l.xnor){
+        printf("we actually did xnor in conv layer\n");
+    }
 
     int m = l.n;
     int k = l.size*l.size*l.c;

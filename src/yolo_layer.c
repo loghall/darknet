@@ -169,6 +169,8 @@ void forward_yolo_layer(const layer l, network_state state)
 	float * output = (float *) l.output;
 
     int i,j,b,t,n;
+    float * input = (float *) state.input;
+    float * output = (float *) l.output;
     memcpy(output, input, l.outputs*l.batch*sizeof(float));
 
 #ifndef GPU
@@ -326,7 +328,7 @@ void correct_yolo_boxes(detection *dets, int n, int w, int h, int netw, int neth
 
 int yolo_num_detections(layer l, float thresh)
 {
-    float * output = (float *) l.output;
+    float *output = (float *) l.output;
     int i, n;
     int count = 0;
     for (i = 0; i < l.w*l.h; ++i){
@@ -342,29 +344,7 @@ int yolo_num_detections(layer l, float thresh)
 
 void avg_flipped_yolo(layer l)
 {
-    int i,j,n,z;
-    float * output = (float * ) l.output;
-    float *flip = output + l.outputs;
-    for (j = 0; j < l.h; ++j) {
-        for (i = 0; i < l.w/2; ++i) {
-            for (n = 0; n < l.n; ++n) {
-                for(z = 0; z < l.classes + 4 + 1; ++z){
-                    int i1 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + i;
-                    int i2 = z*l.w*l.h*l.n + n*l.w*l.h + j*l.w + (l.w - i - 1);
-                    float swap = flip[i1];
-                    flip[i1] = flip[i2];
-                    flip[i2] = swap;
-                    if(z == 0){
-                        flip[i1] = -flip[i1];
-                        flip[i2] = -flip[i2];
-                    }
-                }
-            }
-        }
-    }
-    for(i = 0; i < l.outputs; ++i){
-        output[i] = (output[i] + flip[i])/2.;
-    }
+    printf("avg flipped yolo\n");
 }
 
 int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets, int letter)

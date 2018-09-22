@@ -37,7 +37,7 @@ void resize_dropout_layer(dropout_layer *l, int inputs)
 
 void forward_dropout_layer(dropout_layer l, network_state state)
 {
-    return;
+    printf("apparently we have a forward layer\n");
 }
 
 void backward_dropout_layer(dropout_layer l, network_state state)
