@@ -79,45 +79,14 @@ void resize_maxpool_layer(maxpool_layer *l, int w, int h)
 }
 
 void forward_maxpool_layer(const maxpool_layer l, network_state state)
-{
+{   float * input = (float *) state.input;
+    float * output = (float *) l.output;
+    
     if (!state.train) {
-        forward_maxpool_layer_avx(state.input, l.output, l.indexes, l.size, l.w, l.h, l.out_w, l.out_h, l.c, l.pad, l.stride, l.batch);
+        forward_maxpool_layer_avx(input, output, l.indexes, l.size, l.w, l.h, l.out_w, l.out_h, l.c, l.pad, l.stride, l.batch);
         return;
     }
-
-    int b,i,j,k,m,n;
-    int w_offset = -l.pad / 2;
-    int h_offset = -l.pad / 2;
-
-    int h = l.out_h;
-    int w = l.out_w;
-    int c = l.c;
-
-    for(b = 0; b < l.batch; ++b){
-        for(k = 0; k < c; ++k){
-            for(i = 0; i < h; ++i){
-                for(j = 0; j < w; ++j){
-                    int out_index = j + w*(i + h*(k + c*b));
-                    float max = -FLT_MAX;
-                    int max_i = -1;
-                    for(n = 0; n < l.size; ++n){
-                        for(m = 0; m < l.size; ++m){
-                            int cur_h = h_offset + i*l.stride + n;
-                            int cur_w = w_offset + j*l.stride + m;
-                            int index = cur_w + l.w*(cur_h + l.h*(k + b*l.c));
-                            int valid = (cur_h >= 0 && cur_h < l.h &&
-                                         cur_w >= 0 && cur_w < l.w);
-                            float val = (valid != 0) ? state.input[index] : -FLT_MAX;
-                            max_i = (val > max) ? index : max_i;
-                            max   = (val > max) ? val   : max;
-                        }
-                    }
-                    l.output[out_index] = max;
-                    l.indexes[out_index] = max_i;
-                }
-            }
-        }
-    }
+	printf("Oh no maxpool\n");
 }
 
 void backward_maxpool_layer(const maxpool_layer l, network_state state)

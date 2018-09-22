@@ -76,7 +76,7 @@ typedef struct network{
 
 typedef struct network_state {
     float *truth;
-    float *input;
+    void *input;
     float *delta;
     float *workspace;
     int train;

@@ -67,11 +67,13 @@ void resize_upsample_layer(layer *l, int w, int h)
 
 void forward_upsample_layer(const layer l, network_state net)
 {
-    fill_cpu(l.outputs*l.batch, 0, l.output, 1);
+    float * output = (float *) l.output;
+    float * input = (float *) net.input;
+    fill_cpu(l.outputs*l.batch, 0, output, 1);
     if(l.reverse){
-        upsample_cpu(l.output, l.out_w, l.out_h, l.c, l.batch, l.stride, 0, l.scale, net.input);
+        upsample_cpu(output, l.out_w, l.out_h, l.c, l.batch, l.stride, 0, l.scale, input);
     }else{
-        upsample_cpu(net.input, l.w, l.h, l.c, l.batch, l.stride, 1, l.scale, l.output);
+        upsample_cpu(input, l.w, l.h, l.c, l.batch, l.stride, 1, l.scale, output);
     }
 }
 

@@ -459,9 +459,7 @@ void vec_char_rnn(char *cfgfile, char *weightfile, char *seed)
         cuda_pull_array(l.output_gpu, l.output, l.outputs);
         #endif
         printf("%s", line);
-        for(i = 0; i < l.outputs; ++i){
-            printf(",%g", l.output[i]);
-        }
+        printf("apparently we needed rnn\n");
         printf("\n");
     }
 }
