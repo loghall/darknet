@@ -78,7 +78,7 @@ void gemm_nn_fixed(int M, int N, int K,
     for (i = 0; i < M; ++i) {
         for (k = 0; k < K; ++k) {
             for (j = 0; j < N; ++j) {
-                C[i * ldc + j] += (uint16_t) ((A[i * lda + k]*B[k*ldb + j]) / FIXED_MULT_DIVISOR);
+                C[i * ldc + j] += (int16_t) ((A[i * lda + k]*B[k*ldb + j]) / FIXED_MULT_DIVISOR);
             }
         }
     }

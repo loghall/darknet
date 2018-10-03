@@ -12,7 +12,7 @@
 extern "C" {
 #endif
     #define TOTAL_BITS 16
-    #define FRACTION_BITS 8 // Should probably pull this out into a header file
+    #define FRACTION_BITS 9 // S7ould probably pull this out into a header file
     #define FIXED_MULT_DIVISOR (1 << FRACTION_BITS)
 
 
